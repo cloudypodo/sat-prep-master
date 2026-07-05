@@ -1,0 +1,73 @@
+name: Build macOS App
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-mac:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install root dependencies
+        run: npm install
+
+      - name: Build macOS app (arm64)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node scripts/build-electron.mjs --mac --arch=arm64
+
+      - name: Smoke test the built app
+        run: |
+          set -e
+          APP="dist-electron/mac-arm64/SAT Prep Master.app/Contents/MacOS/SAT Prep Master"
+          "$APP" --disable-gpu --no-sandbox &
+          APP_PID=$!
+
+          ready=""
+          for i in $(seq 1 30); do
+            code=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:3001/api/health || true)
+            if [ "$code" = "200" ]; then ready=1; break; fi
+            sleep 1
+          done
+          if [ -z "$ready" ]; then
+            echo "Backend never became healthy"
+            exit 1
+          fi
+          echo "Backend healthy"
+
+          curl -sf -X POST http://127.0.0.1:3001/api/auth/register \
+            -H "Content-Type: application/json" \
+            -d '{"email":"ci-smoke-test@example.com","password":"TestPass123!","name":"CI Smoke Test"}' \
+            -o register.json
+          TOKEN=$(node -e "console.log(JSON.parse(require('fs').readFileSync('register.json','utf8')).token)")
+
+          curl -sf -X POST http://127.0.0.1:3001/api/tests \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer $TOKEN" \
+            -d '{"mode":"custom_practice","section":"math","difficulty":"easy","count":2}' \
+            -o test.json
+          node -e "
+            const d = require('./test.json');
+            const qs = d.questions && d.questions.math_module1;
+            if (!qs || qs.length !== 2) { console.error('Unexpected response', JSON.stringify(d)); process.exit(1); }
+            console.log('Generated', qs.length, 'questions OK via real Anthropic call');
+          "
+
+          kill "$APP_PID" 2>/dev/null || true
+          sleep 1
+          if curl -s -o /dev/null --max-time 2 http://127.0.0.1:3001/api/health; then
+            echo "Backend still responding after app quit — orphaned process!"
+            exit 1
+          fi
+          echo "Backend cleanly shut down, no orphaned process"
+
+      - name: Upload dmg artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SAT-Prep-Master-mac-arm64
+          path: dist-electron/*.dmg

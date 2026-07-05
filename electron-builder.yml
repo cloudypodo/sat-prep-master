@@ -1,0 +1,40 @@
+appId: com.satprepmaster.app
+productName: SAT Prep Master
+directories:
+  output: dist-electron
+files:
+  - electron/**/*
+  - package.json
+  - "!node_modules/**/*"
+  - "!backend/**/*"
+  - "!frontend/**/*"
+  - "!electron-build/**/*"
+  - "!scripts/**/*"
+  - "!data/**/*"
+extraResources:
+  - from: electron-build/backend-staging
+    to: backend
+    filter:
+      - "**/*"
+  - from: frontend/dist
+    to: frontend/dist
+    filter:
+      - "**/*"
+  - from: electron-build/secrets.local.env
+    to: backend-secrets.env
+npmRebuild: false
+asar: true
+win:
+  target: nsis
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+mac:
+  target: dmg
+  category: public.app-category.education
+  # No Apple Developer ID certificate available for this project, so this
+  # relies on electron-builder's default ad-hoc signing fallback (required
+  # for arm64 builds to even launch). Users will see an "unidentified
+  # developer" Gatekeeper warning on first open — right-click > Open, or
+  # `xattr -cr` the .app, to bypass it. Same category of limitation as the
+  # unsigned Windows installer's SmartScreen warning.

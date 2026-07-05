@@ -40,4 +40,4 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(frontendDist, 'index.html'));
 });
 
-app.listen(PORT, () => console.log(`SAT Prep Master running on port ${PORT}`));
+app.listen(PORT, process.env.HOST || '0.0.0.0', () => console.log(`SAT Prep Master running on port ${PORT}`));

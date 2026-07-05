@@ -1,13 +1,21 @@
 {
   "name": "sat-prep-master",
   "version": "1.0.0",
+  "main": "electron/main.js",
   "scripts": {
     "build": "cd frontend && npm install --include=dev && npm run build && cd ../backend && npm install",
     "start": "node backend/src/index.js",
     "dev:backend": "cd backend && npm run dev",
-    "dev:frontend": "cd frontend && npm run dev"
+    "dev:frontend": "cd frontend && npm run dev",
+    "electron:dev": "electron electron/dev.js",
+    "electron:build": "node scripts/build-electron.mjs"
   },
   "engines": {
     "node": "20.x"
+  },
+  "devDependencies": {
+    "@electron/rebuild": "4.0.6",
+    "electron": "42.0.0",
+    "electron-builder": "26.15.3"
   }
 }

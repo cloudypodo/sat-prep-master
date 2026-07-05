@@ -1,5 +1,7 @@
 node_modules/
-backend/data/
+/data/
 frontend/dist/
 .env
 *.env.local
+dist-electron/
+electron-build/

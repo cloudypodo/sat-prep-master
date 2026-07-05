@@ -17,6 +17,18 @@ const MATH_TOPICS = [
   'Ratios, Rates & Proportions', 'Percentages', 'One-Variable Data',
   'Two-Variable Data', 'Probability', 'Inference & Statistics',
   'Area & Volume', 'Lines, Angles & Triangles', 'Right Triangles & Trigonometry', 'Circles',
+  'Polynomial Functions & Division', 'Rational Functions & Expressions', 'Exponential & Logarithmic Functions',
+  'Complex Numbers', 'Sequences & Series', 'Matrices',
+  'Trigonometric Functions & Identities', 'Unit Circle & Radians', 'Conic Sections',
+  'Vectors', 'Polar Coordinates', 'Function Inverses & Compositions',
+  'Limits & Continuity', 'Derivatives & Rates of Change', 'Applications of Derivatives',
+  'Integrals & Area Under Curves', 'Fundamental Theorem of Calculus',
+  'Coordinate Geometry & Conic Sections', 'Solid Geometry & 3D Volume', 'Circle Theorems & Arc Relationships',
+  '3D Coordinate Geometry', 'Geometric Proofs & Similarity',
+  'Law of Sines & Cosines', 'Trigonometric Graphs & Transformations', 'Trigonometric Equations',
+  'Sum & Difference Formulas', 'Double & Half-Angle Formulas', 'Inverse Trigonometric Functions',
+  'Algebra + Geometry Integration', 'Calculus + Algebra Integration',
+  'Trigonometry + Functions Integration', 'Statistics + Advanced Algebra Integration',
 ];
 
 export default function TestSetup() {
