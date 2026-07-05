@@ -24,6 +24,7 @@ extraResources:
     to: backend-secrets.env
 npmRebuild: false
 asar: true
+publish: never
 win:
   target: nsis
 nsis:
