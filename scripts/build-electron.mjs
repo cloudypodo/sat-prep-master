@@ -104,7 +104,7 @@ function packageApp() {
   rmSync(destNodeModules, { recursive: true, force: true });
   cpSync(path.join(STAGING_DIR, 'node_modules'), destNodeModules, { recursive: true });
 
-  run('npx', ['electron-builder', '--config', 'electron-builder.yml', platformFlag, ...archFlag, '--prepackaged', unpackedDir]);
+  run('npx', ['electron-builder', '--config', 'electron-builder.yml', platformFlag, ...archFlag, '--publish', 'never', '--prepackaged', unpackedDir]);
 }
 
 buildFrontend();
